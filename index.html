@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="bg">
+<head>
+	<meta charset="UTF-8">
+	<title>DPI to List of Observations</title>	
+</head>
+<body>
+	<div id="container">
+	</div>
+	<script type="text/javascript">
+		window.onload = function(){
+			var container = document.getElementById('container');
+			
+			var inputTitle = document.createElement('h2');
+			var outputTitle = document.createElement('h2');
+			
+			inputTitle.innerHTML = "DPI";
+			outputTitle.innerHTML = "Text";
+			
+			var inputTextArea = document.createElement('textarea');
+			inputTextArea.className = 'input-content';
+			inputTextArea.style.display = "block";
+			inputTextArea.style.width = "90%";
+			inputTextArea.style.height = "300px";
+			
+			var outputTextArea = document.createElement('textarea');
+			outputTextArea.className = 'output-content';
+			outputTextArea.style.display = "block";
+			outputTextArea.style.width = "90%";
+			outputTextArea.style.height = "300px";
+			
+			var button = document.createElement('button');
+			button.className = 'submit-button';
+			button.innerHTML = 'Convert';
+			
+			function readInput() {
+				var inputElement = container.querySelector('.input-content');
+				var inputContent = inputElement.value;
+				
+				var inputData = inputContent.split("\n");
+
+				convert(inputData);
+			}
+			
+			function convert(data){
+				if(data.length > 4){
+					outputTextArea.innerHTML = "";
+				
+					var currentStation = "";
+					
+					for(var i = 3; i < data.length; i++){
+						var line = data[i].trim().replace(/\s\s+/g, ' ').split(" ");
+						
+						if(line[0] === "Stn"){
+							currentStation = line[1];
+							continue;
+						}
+						
+						if(line.length !== 6){
+							alert("невалиден запис на ред " + (i + 1));
+							continue;
+						}
+						
+						var observation = line[1];
+						var elevation = line[5];
+						var lineLenght = line[3];
+						
+						outputTextArea.innerHTML += currentStation + " " + observation + " " + elevation + " " + lineLenght + "\n";
+					}
+				}
+			}
+
+			container.appendChild(inputTitle);
+			container.appendChild(inputTextArea);
+			container.appendChild(outputTitle);
+			container.appendChild(outputTextArea);
+			container.appendChild(button);
+			
+			var submitButton = container.querySelector('.submit-button');
+			submitButton.addEventListener('click', readInput, false);
+		}
+	</script>
+</body>
+</html>
